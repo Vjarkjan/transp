@@ -6,7 +6,7 @@ use axum::{
         ws::{Message, Utf8Bytes, WebSocket, WebSocketUpgrade},
     },
     response::IntoResponse,
-    routing::any,
+    routing::{any, get_service},
 };
 use axum_extra::{TypedHeader, headers};
 use rand::prelude::*;
@@ -104,6 +104,7 @@ async fn main() {
 
     let app = Router::new()
         .route("/ws", any(ws_handler))
+        .nest_service("/app", get_service(ServeDir::new("client")))
         .with_state(state)
         .layer(
             TraceLayer::new_for_http().make_span_with(DefaultMakeSpan::new().include_headers(true)),
@@ -139,7 +140,7 @@ async fn ws_handler(
 
     tracing::warn!("Upgrading websocket connection");
 
-    let _ = ws.on_upgrade(move |socket| handle_socket(socket, addr.clone(), state));
+    ws.on_upgrade(move |socket| handle_socket(socket, addr.clone(), state))
 }
 
 use std::any::type_name_of_val;

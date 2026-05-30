@@ -1,5 +1,6 @@
-use postcard::to_stdvec;
 use serde::{Deserialize, Serialize};
+
+use postcard::to_stdvec;
 
 #[derive(Copy, Clone, Serialize, Deserialize, Debug, PartialEq)]
 pub enum UserCapabilities {
@@ -36,7 +37,7 @@ pub enum Message {
 use axum::extract::ws::Message as AMess;
 
 #[cfg(feature = "wasm")]
-use ewebsock::WsMessage as EMess;
+use async_wsocket::message::Message as EMess;
 
 #[cfg(feature = "desktop")]
 pub fn bin_msg<T: Serialize>(arg: T) -> AMess {
@@ -86,7 +87,7 @@ impl LoginRequest {
         self.user
     }
     pub fn get_pass(&self) -> u64 {
-        self.user
+        self.pass
     }
 }
 
