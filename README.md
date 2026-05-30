@@ -11,20 +11,20 @@ Por el momento falta:
 - Manejo de reconecciones
 - Manejo de sessiones por medio de JWT
 
-Por el momento el server corre en ==127.0.0.1:8089== en las direcciones /app y /ws 
-/app sirve el cliente por medio de ==tower-http== , y wasm, el server hacepta connecciones 
+Por el momento el server corre en `127.0.0.1:8089` en las direcciones /app y /ws 
+/app sirve el cliente por medio de `tower-http` , y wasm, el server hacepta connecciones 
 y logins, maneja desconecciones y asignaciones de UserSessions las cuales contienen el 
 rol,nombre,user id, y session token.
 
 Estructura: 
-==transp-common== contiene los elementos comunes entre el cliente y el servidor:
+`transp-common` contiene los elementos comunes entre el cliente y el servidor:
 funciones de codificacion de mensajes web socket,
 deficiones de Structs y Enums comunes como:
-`LoginRequest`, `UserSession`, `User`, `Message` =="instrucciones de la api"==, etc.
+`LoginRequest`, `UserSession`, `User`, `Message` `"instrucciones de la api"`, etc.
 
 el formato de los mensajes websocket es siempre un `WSMessage::Binary()`,
-los mensajes permitidos son los definidos en ==transp-common== en el `enum Message`
-==el formato de codificacion es postcard== usando serde.
+los mensajes permitidos son los definidos en `transp-common` en el `enum Message`
+`el formato de codificacion es postcard` usando serde.
 
 los mensajes :
 `postcard_codificador(Message::TipoMensaje(postcard_codificador(Estructura de datos)))`
@@ -50,7 +50,7 @@ y producir ensamble final con `wasm-pack build --release --target web`
 eliminar la carpeta transp-server/client/pkg y copiar la nueva carpeta
 pkg en transp-client/pkg a transp-server/client
 por ultimo correr el servidor
-e ir a http://127.0.0.1:8089/app para ver los cambios
+e ir a `http://127.0.0.1:8089/app` para ver los cambios
 
 
 
