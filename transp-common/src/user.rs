@@ -34,14 +34,42 @@ pub enum Message {
     TokenResponse(Vec<u8>),
 }
 
+#[cfg(feature = "desktop")]
 use axum::extract::ws::Message as AMess;
 
+#[cfg(feature = "wasm")]
+use ewebsock::WsMessage as EMess;
+
+#[cfg(feature = "desktop")]
 pub fn bin_msg<T: Serialize>(arg: T) -> AMess {
-    axum::extract::ws::Message::binary(to_stdvec(&arg).unwrap())
+    AMess::binary(to_stdvec(&arg).unwrap())
 }
+
+#[cfg(feature = "wasm")]
+pub fn bin_msg_tg<T: Serialize>(arg: T) -> EMess {
+    EMess::Binary(to_stdvec(&arg).unwrap())
+}
+
+#[cfg(feature = "desktop")]
 pub fn bin_err<T: Serialize>(arg: T) -> AMess {
     bin_msg(Message::Error(to_stdvec(&arg).unwrap()))
 }
+
+#[cfg(feature = "wasm")]
+pub fn bin_logreq_tg(user: u64, pass: u64) -> EMess {
+    bin_msg_tg(Message::Login(
+        to_stdvec(&LoginRequest::new(user, pass)).unwrap(),
+    ))
+}
+
+#[cfg(feature = "desktop")]
+pub fn bin_logreq(user: u64, pass: u64) -> AMess {
+    bin_msg(Message::Login(
+        to_stdvec(&LoginRequest::new(user, pass)).unwrap(),
+    ))
+}
+
+#[cfg(feature = "desktop")]
 pub fn bin_session(ses: &UserSession) -> AMess {
     bin_msg(Message::LoginResponse(to_stdvec(ses).unwrap()))
 }
@@ -53,6 +81,9 @@ pub struct LoginRequest {
 }
 
 impl LoginRequest {
+    pub fn new(user: u64, pass: u64) -> Self {
+        Self { user, pass }
+    }
     pub fn get_user(&self) -> u64 {
         self.user
     }

@@ -15,7 +15,6 @@ use postcard::{from_bytes, to_stdvec};
 use serde::{Serialize, de::SeqAccess};
 use std::{collections::HashMap, fmt::Debug};
 use std::{net::SocketAddr, path::PathBuf};
-use tokio::sync::mpsc::{Receiver, Sender};
 use tower_http::{
     services::ServeDir,
     trace::{DefaultMakeSpan, TraceLayer},
@@ -24,8 +23,6 @@ use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 use transp_common::user::{self as tpu, LoginRequest, UserSession};
 // Allows extracting the IP of the connecting user
 use axum::extract::connect_info::ConnectInfo;
-use axum::extract::ws::CloseFrame;
-
 // Allows splitting the websocket stream into separate TX and RX branches
 use futures_util::{
     sink::SinkExt,
@@ -112,7 +109,7 @@ async fn main() {
             TraceLayer::new_for_http().make_span_with(DefaultMakeSpan::new().include_headers(true)),
         );
 
-    let listener = tokio::net::TcpListener::bind("127.0.0.1:1000")
+    let listener = tokio::net::TcpListener::bind("127.0.0.1:8089")
         .await
         .unwrap();
 
