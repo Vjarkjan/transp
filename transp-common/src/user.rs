@@ -1,6 +1,4 @@
-use core::ops::Deref;
 use postcard::to_stdvec;
-use serde::de::DeserializeOwned;
 use serde::{Deserialize, Serialize};
 
 #[derive(Copy, Clone, Serialize, Deserialize, Debug, PartialEq)]
